@@ -1,17 +1,51 @@
-// handle mouse hover for selection/deselection
-function selectElement(element) {
-    if (skipEmptyDropdowns && element.value === "") {
+function isDayHoliday(dayType) {
+    return (dayType.textContent.includes("休日"));
+}
+
+function selectRow(row) {
+    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
         return;
     }
-    if (!selectedElements.includes(element)) {
-        selectedElements.push(element);
+    selectElement(selectWorkStatusFromRow(row));
+}
+
+function deselectRow(row) {
+    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
+        return;
+    }
+    deselectElement(selectWorkStatusFromRow(row));
+}
+
+function toggleRow(row) {
+    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
+        return;
+    }
+    const workStatus = selectWorkStatusFromRow(row);
+    if (selectedWorkStatuses.includes(workStatus)) {
+        deselectRow(row);
+    } else {
+        selectRow(row);
+    }
+}
+
+function selectElement(element) {
+    if (!element) {
+        console.warn("Attempted to select null element");
+        return;
+    }
+    if (!selectedWorkStatuses.includes(element)) {
+        selectedWorkStatuses.push(element);
         element.classList.add('selectable-highlight');
     }
 }
 
 function deselectElement(element) {
-    if (selectedElements.includes(element)) {
-        selectedElements = selectedElements.filter(el => el !== element);
+    if (!element) {
+        console.warn("Attempted to deselect null element");
+        return;
+    }
+    if (selectedWorkStatuses.includes(element)) {
+        selectedWorkStatuses = selectedWorkStatuses.filter(el => el !== element);
         element.classList.remove('selectable-highlight');
     }
 }
@@ -21,17 +55,17 @@ function handleDropdownMouseOver(e) {
     if (!(dropdown instanceof HTMLSelectElement) || !dropdown.classList.contains('attendance-select-field')) {
         return;
     }
-    if (skipEmptyDropdowns && dropdown.value === "") {
+    if (skipHolidays && dropdown.value === "") {
         console.log("Skipping empty dropdown due to toggle.");
         return;
     }
 
     if (e.shiftKey) { // Select with Shift
-        if (!selectedElements.includes(dropdown)) {
+        if (!selectedWorkStatuses.includes(dropdown)) {
             selectElement(dropdown);
         }
     } else if (e.altKey) { // Deselect with Alt
-        if (selectedElements.includes(dropdown)) {
+        if (selectedWorkStatuses.includes(dropdown)) {
             deselectElement(dropdown);
         }
     }
@@ -61,41 +95,66 @@ function updateSelectOption(selectElement, valueToSelect) {
 
 // Select by day of the week
 function selectByDay(day) {
-    document.querySelectorAll(".attendance-table-contents .v3")
+    const rows = selectAllRows();
+    rows
         .forEach(row => {
-            const dayCell = row.querySelector('.column-day');
-            const patternCell = row.querySelector('.column-pattern .attendance-select-field');
-            if (dayCell && patternCell && dayCell.textContent.includes(day)) {
-                selectElement(patternCell);
+            console.log(row);
+            const dayCell = selectDayFromRow(row);
+            console.log(dayCell);
+            if (dayCell.textContent.includes(day)) {
+                toggleRow(row);
             }
     });
 }
 
 function selectAll() {
-    const allMatchingDropdowns = document.querySelectorAll(".column-pattern .attendance-select-field");
-    let newlySelectedCount = 0;
+    const allWorkStatuses = selectAllWorkStatuses();
 
-    allMatchingDropdowns.forEach(dropdown => {
-        if (skipEmptyDropdowns && dropdown.value === "") {
+    allWorkStatuses.forEach(dropdown => {
+        if (skipHolidays && dropdown.value === "") {
             console.log("Select All: Skipping empty dropdown due to toggle.", dropdown);
             return;
         }
 
-        if (!selectedElements.includes(dropdown)) {
-            selectedElements.push(dropdown);
+        if (!selectedWorkStatuses.includes(dropdown)) {
+            selectedWorkStatuses.push(dropdown);
             dropdown.classList.add('selectable-highlight');
-            newlySelectedCount++;
         }
     });
 }
 
 function invert() {
-    document.querySelector(".attendance-table-contents .v3 .column-pattern .attendance-select-field")
-        .forEach(element => {
-            if (selectedElements.includes(element)) {
-                deselectElement(element);
+    selectAllRows()
+        .forEach(row => {
+            const workStatus = selectWorkStatusFromRow(row);
+            if (selectedWorkStatuses.includes(workStatus)) {
+                deselectElement(workStatus);
             } else {
-                selectElement(element);
+                selectElement(workStatus);
             }
         })
+}
+
+function toggleSkipHolidays(event) {
+    skipHolidays = event.target.checked;
+}
+
+function selectAllRows() {
+    return document.querySelectorAll(".attendance-table-contents tr.v3");
+}
+
+function selectAllWorkStatuses() {
+    return document.querySelectorAll(".column-pattern .attendance-select-field");
+}
+
+function selectWorkStatusFromRow(row) {
+    return row.querySelector(".column-pattern .attendance-select-field");
+}
+
+function selectDayFromRow(row) {
+    return row.querySelector(".column-day");
+}
+
+function selectDayTypeFromRow(row) {
+    return row.querySelector(".column-classification");
 }

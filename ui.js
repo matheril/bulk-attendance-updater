@@ -30,25 +30,7 @@ function createApplyButton() {
     applyButton.textContent = "Apply";
     applyButton.style.marginLeft = "5px";
     applyButton.addEventListener("click", () => {
-        const bulkChangeSelect = pluginContainer.querySelector("select");
-        const selectedValue = bulkChangeSelect.value;
-
-        if (!selectedValue) {
-            alert("Please select a value from the '一括変更' dropdown to apply.");
-            return;
-        }
-        if (selectedElements.length === 0) {
-            alert("No dropdowns have been selected. Hold Shift and hover over dropdowns to select them, or Alt and hover to deselect, or use 'Select All'.");
-            return;
-        }
-
-        console.log(`Applying value '${selectedValue}' to ${selectedElements.length} dropdowns.`);
-        selectedElements.forEach(dropdown => {
-            updateSelectOption(dropdown, selectedValue);
-        });
-
-        selectedElements.forEach(el => el.classList.remove('selectable-highlight'));
-        selectedElements = [];
+        paintCells();
     });
     return applyButton;
 }
@@ -68,7 +50,8 @@ function createInvertButton() {
     button.textContent = "反対";
     button.addEventListener('click', () => {
         invert();
-    })
+    });
+    return button;
 }
 
 function createSkipEmptyCheckbox() {
@@ -78,11 +61,10 @@ function createSkipEmptyCheckbox() {
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
-    checkbox.checked = skipEmptyDropdowns;
+    checkbox.checked = skipHolidays;
 
     checkbox.addEventListener('change', (event) => {
-        skipEmptyDropdowns = event.target.checked;
-        console.log(`Skip empty dropdowns toggled to: ${skipEmptyDropdowns}`);
+        toggleSkipHolidays(event);
     });
 
     checkboxLabel.appendChild(checkbox);

@@ -1,7 +1,7 @@
 console.log("Attendance Updater content script loaded.");
 
-let selectedElements = [];
-let skipEmptyDropdowns = true;
+let selectedWorkStatuses = [];
+let skipHolidays = true;
 
 const pluginContainer = document.querySelector(".attendance-main-contents-inner");
 
@@ -15,6 +15,7 @@ if (pluginContainer) {
     const paintSelectMenu = createPaintSelectMenu();
     const applyButton = createApplyButton();
     const selectAllButton = createSelectAllButton();
+    const invertButton = createInvertButton();
     const skipEmptyDropdownsCheckboxContainer = createSkipEmptyCheckbox();
     const daySelector = createDaySelector();
 
@@ -22,6 +23,7 @@ if (pluginContainer) {
     paintInterface.appendChild(applyButton);
     selectionInterface.appendChild(daySelector);
     selectionInterface.appendChild(selectAllButton);
+    selectionInterface.appendChild(invertButton);
     selectionInterface.appendChild(skipEmptyDropdownsCheckboxContainer);
 
     pluginContainer.prepend(selectionInterface);

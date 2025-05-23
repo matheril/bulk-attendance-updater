@@ -1,5 +1,3 @@
-console.log("Attendance Updater content script loaded.");
-
 let selectedWorkStatuses = [];
 let skipHolidays = true;
 

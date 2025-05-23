@@ -52,7 +52,6 @@ function handleElementMouseOver(e) {
         return;
     }
     if (skipHolidays && element.value === "") {
-        console.log("Skipping empty dropdown due to toggle.");
         return;
     }
 
@@ -70,7 +69,6 @@ function handleElementMouseOver(e) {
 function initializeHoverSelection() {
     const container = document.body;
     container.addEventListener('mouseover', handleElementMouseOver);
-    console.log("Hover selection initialized on the document body for 'attendance-select-field' elements.");
 }
 
 function updateSelectOption(selectElement, valueToSelect) {

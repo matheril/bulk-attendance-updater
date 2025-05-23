@@ -9,6 +9,11 @@ function createPaintSelectMenu() {
     defaultOption.textContent = "-- 選択 --";
     select.appendChild(defaultOption);
 
+    const blankOption = document.createElement("option");
+    blankOption.value = "";
+    blankOption.textContent = "【リセット】";
+    select.appendChild(blankOption);
+
     const options = [
         { value: "54027", label: "【オフィス出勤】正社員（フレックス休憩無し）" },
         { value: "54026", label: "【オフィス出勤】正社員（フレックス）" },

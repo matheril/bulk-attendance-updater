@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Attendance Updater",
+  "version": "1.0",
+  "description": "Updates attendance status in bulk.",
+  "permissions": ["activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}

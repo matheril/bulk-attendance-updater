@@ -29,10 +29,6 @@ function toggleRow(row) {
 }
 
 function selectElement(element) {
-    if (!element) {
-        console.warn("Attempted to select null element");
-        return;
-    }
     if (!selectedWorkStatuses.includes(element)) {
         selectedWorkStatuses.push(element);
         element.classList.add('selectable-highlight');
@@ -40,10 +36,6 @@ function selectElement(element) {
 }
 
 function deselectElement(element) {
-    if (!element) {
-        console.warn("Attempted to deselect null element");
-        return;
-    }
     if (selectedWorkStatuses.includes(element)) {
         selectedWorkStatuses = selectedWorkStatuses.filter(el => el !== element);
         element.classList.remove('selectable-highlight');
@@ -95,13 +87,9 @@ function updateSelectOption(selectElement, valueToSelect) {
 
 // Select by day of the week
 function selectByDay(day) {
-    const rows = selectAllRows();
-    rows
+    selectAllRows()
         .forEach(row => {
-            console.log(row);
-            const dayCell = selectDayFromRow(row);
-            console.log(dayCell);
-            if (dayCell.textContent.includes(day)) {
+            if (selectDayFromRow(row).textContent.includes(day)) {
                 toggleRow(row);
             }
     });
@@ -128,9 +116,9 @@ function invert() {
         .forEach(row => {
             const workStatus = selectWorkStatusFromRow(row);
             if (selectedWorkStatuses.includes(workStatus)) {
-                deselectElement(workStatus);
+                deselectRow(row);
             } else {
-                selectElement(workStatus);
+                selectRow(row);
             }
         })
 }

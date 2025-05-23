@@ -6,7 +6,7 @@
   "permissions": ["activeTab", "scripting"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://attendance.moneyforward.com/my_page/bulk_attendances*"],
       "js": ["selectionMethods.js", "paintMethods.js", "ui.js", "content.js"],
       "css": ["styles.css"]
     }

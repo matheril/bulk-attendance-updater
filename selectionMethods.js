@@ -1,23 +1,23 @@
-function isDayHoliday(dayType) {
+function isHoliday(dayType) {
     return (dayType.textContent.includes("休日"));
 }
 
 function selectRow(row) {
-    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
+    if (skipHolidays && isHoliday(selectDayTypeFromRow(row))) {
         return;
     }
     selectElement(selectWorkStatusFromRow(row));
 }
 
 function deselectRow(row) {
-    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
+    if (skipHolidays && isHoliday(selectDayTypeFromRow(row))) {
         return;
     }
     deselectElement(selectWorkStatusFromRow(row));
 }
 
 function toggleRow(row) {
-    if (skipHolidays && isDayHoliday(selectDayTypeFromRow(row))) {
+    if (skipHolidays && isHoliday(selectDayTypeFromRow(row))) {
         return;
     }
     const workStatus = selectWorkStatusFromRow(row);
@@ -42,30 +42,34 @@ function deselectElement(element) {
     }
 }
 
-function handleDropdownMouseOver(e) {
-    const dropdown = e.target;
-    if (!(dropdown instanceof HTMLSelectElement) || !dropdown.classList.contains('attendance-select-field')) {
+function handleElementMouseOver(e) {
+    const element = e.target;
+    const parent = element.parentElement;
+    if (!parent || !parent.classList.contains("column-pattern")) {
         return;
     }
-    if (skipHolidays && dropdown.value === "") {
+    if (!(element instanceof HTMLSelectElement) || !element.classList.contains('attendance-select-field')) {
+        return;
+    }
+    if (skipHolidays && element.value === "") {
         console.log("Skipping empty dropdown due to toggle.");
         return;
     }
 
     if (e.shiftKey) { // Select with Shift
-        if (!selectedWorkStatuses.includes(dropdown)) {
-            selectElement(dropdown);
+        if (!selectedWorkStatuses.includes(element)) {
+            selectElement(element);
         }
     } else if (e.altKey) { // Deselect with Alt
-        if (selectedWorkStatuses.includes(dropdown)) {
-            deselectElement(dropdown);
+        if (selectedWorkStatuses.includes(element)) {
+            deselectElement(element);
         }
     }
 }
 
 function initializeHoverSelection() {
     const container = document.body;
-    container.addEventListener('mouseover', handleDropdownMouseOver);
+    container.addEventListener('mouseover', handleElementMouseOver);
     console.log("Hover selection initialized on the document body for 'attendance-select-field' elements.");
 }
 
@@ -96,19 +100,25 @@ function selectByDay(day) {
 }
 
 function selectAll() {
-    const allWorkStatuses = selectAllWorkStatuses();
+    const allRows = selectAllRows();
 
-    allWorkStatuses.forEach(dropdown => {
-        if (skipHolidays && dropdown.value === "") {
-            console.log("Select All: Skipping empty dropdown due to toggle.", dropdown);
+    allRows.forEach(row => {
+        if (skipHolidays && isHoliday(selectDayTypeFromRow(row))) {
             return;
         }
 
-        if (!selectedWorkStatuses.includes(dropdown)) {
-            selectedWorkStatuses.push(dropdown);
-            dropdown.classList.add('selectable-highlight');
+        const workStatus = selectWorkStatusFromRow(row);
+        if (!selectedWorkStatuses.includes(workStatus)) {
+            selectElement(workStatus);
         }
     });
+}
+
+function deselectAll() {
+    selectedWorkStatuses
+        .forEach(workStatus => {
+            deselectElement(workStatus);
+        })
 }
 
 function invert() {

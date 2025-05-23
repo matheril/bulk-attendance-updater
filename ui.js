@@ -27,7 +27,7 @@ function createPaintSelectMenu() {
 
 function createApplyButton() {
     const applyButton = document.createElement("button");
-    applyButton.textContent = "Apply";
+    applyButton.textContent = "変更";
     applyButton.style.marginLeft = "5px";
     applyButton.addEventListener("click", () => {
         paintCells();
@@ -38,9 +38,18 @@ function createApplyButton() {
 function createSelectAllButton() {
     const button = document.createElement("button");
     button.textContent = "全て";
-    button.style.marginLeft = "5px";
     button.addEventListener("click", () => {
         selectAll();
+    });
+    return button;
+}
+
+function createDeselectAllButton() {
+    const button = document.createElement("button");
+    button.textContent = "全選択解除";
+    button.style.marginLeft = "5px";
+    button.addEventListener("click", () => {
+        deselectAll();
     });
     return button;
 }

@@ -11,6 +11,9 @@ function paintCells() {
         updateSelectOption(dropdown, selectedValue);
     });
 
+    /*
     selectedWorkStatuses.forEach(el => el.classList.remove('selectable-highlight'));
     selectedWorkStatuses = [];
+
+     */
 }

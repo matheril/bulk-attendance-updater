@@ -44,24 +44,24 @@ function deselectElement(element) {
 
 function handleElementMouseOver(e) {
     const element = e.target;
-    const parent = element.parentElement;
-    if (!parent || !parent.classList.contains("column-pattern")) {
-        return;
-    }
     if (!(element instanceof HTMLSelectElement) || !element.classList.contains('attendance-select-field')) {
         return;
     }
-    if (skipHolidays && element.value === "") {
+    let row = element;
+    while (!row.classList.contains("v3")) {
+        row = row.parentElement;
+    }
+    if (skipHolidays && isHoliday(selectDayTypeFromRow(row))) {
         return;
     }
 
     if (e.shiftKey) { // Select with Shift
-        if (!selectedWorkStatuses.includes(element)) {
-            selectElement(element);
+        if (!selectedWorkStatuses.includes(selectWorkStatusFromRow(row))) {
+            selectRow(row);
         }
     } else if (e.altKey) { // Deselect with Alt
-        if (selectedWorkStatuses.includes(element)) {
-            deselectElement(element);
+        if (selectedWorkStatuses.includes(selectWorkStatusFromRow(row))) {
+            deselectRow(row);
         }
     }
 }

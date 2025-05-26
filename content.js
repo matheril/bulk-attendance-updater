@@ -15,7 +15,6 @@ if (pluginContainer) {
     const selectAllButton = createSelectAllButton();
     const deselectAllButton = createDeselectAllButton();
     const invertButton = createInvertButton();
-    const skipEmptyDropdownsCheckboxContainer = createSkipEmptyCheckbox();
     const daySelector = createDaySelector();
 
     paintInterface.appendChild(paintSelectMenu);
@@ -24,7 +23,6 @@ if (pluginContainer) {
     selectionInterface.appendChild(selectAllButton);
     selectionInterface.appendChild(deselectAllButton);
     selectionInterface.appendChild(invertButton);
-    selectionInterface.appendChild(skipEmptyDropdownsCheckboxContainer);
 
     pluginContainer.prepend(selectionInterface);
     pluginContainer.prepend(paintInterface);
